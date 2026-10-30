@@ -1,8 +1,12 @@
 # CRAVIA — Premium MERN Food Delivery (V2)
 
+[![Source checks](https://github.com/msuhaim491/cravia-food-delivery/actions/workflows/ci.yml/badge.svg)](https://github.com/msuhaim491/cravia-food-delivery/actions/workflows/ci.yml)
+
+**GitHub source:** [msuhaim491/cravia-food-delivery](https://github.com/msuhaim491/cravia-food-delivery) · **Deployment:** Netlify configuration ready; live site URL pending owner setup.
+
 > **Project #2** in an independent portfolio build series. Source code is inspired by the general functionality of [GreatStack's food delivery MERN tutorial](https://www.youtube.com/watch?v=DBMPXJJfQEA), but the design and implementation are independent. This is **not** the tutorial author's repository or a client project.
 
-**Status:** V2 includes a clearly labeled 18-dish preview catalog when MongoDB/API is unavailable, plus animated hero, ticker, reveal-on-scroll and refined cards. **Project owner reports products and animations are working on their Windows machine.** Real ordering requires MongoDB and an API connection; COD and admin flows have not yet been reported as verified. Backend syntax and pricing tests passed; hosted integration and Stripe remain pending (see [QA-REPORT.md](./QA-REPORT.md)). A real screenshot will be added after the first live deploy, not replaced by a mockup.
+**Status:** V2 includes a clearly labeled 18-dish preview catalog when MongoDB/API is unavailable, plus animated hero, ticker, reveal-on-scroll and refined cards. **Project owner reports products and animations are working on their Windows machine.** Real ordering requires MongoDB and an API connection; COD and admin flows have not yet been reported as verified. Backend syntax, pricing tests and full GitHub Actions production build passed on the published repository; hosted integration and Stripe remain pending (see [QA-REPORT.md](./QA-REPORT.md)). A real screenshot will be added after the first live deploy, not replaced by a mockup.
 
 ## Screenshots
 
@@ -85,7 +89,7 @@ Use `npm run check` for backend syntax, pricing unit tests, and production build
 
 ## Status checklist
 
-- [ ] Install deps and verify production build
+- [x] Install deps and verify production build (GitHub Actions CI passed)
 - [ ] Seed dedicated demo MongoDB
 - [ ] Test customer registration/login
 - [ ] Test menu/search/category/cart
