@@ -1,0 +1,13 @@
+import 'dotenv/config';import express from 'express';import cors from 'cors';import helmet from 'helmet';import rateLimit from 'express-rate-limit';
+import auth from './routes/auth.js';import menu from './routes/menu.js';import cart from './routes/cart.js';import orders,{stripeWebhook} from './routes/orders.js';
+if(!process.env.JWT_SECRET||process.env.JWT_SECRET.length<32||process.env.JWT_SECRET.startsWith('REPLACE_'))throw new Error('Set a strong JWT_SECRET of at least 32 characters');
+const app=express();app.disable('x-powered-by');app.use(helmet());
+const origins=[process.env.CLIENT_URL||'http://localhost:5173',process.env.ADMIN_URL||'http://localhost:5174',process.env.URL,process.env.DEPLOY_URL].filter(Boolean).map(v=>v.replace(/\/$/,''));
+app.use(cors({origin(origin,done){if(!origin||origins.includes(origin))return done(null,true);done(new Error('Origin not allowed'))}}));
+app.post('/api/stripe/webhook',express.raw({type:'application/json'}),(req,res,next)=>Promise.resolve(stripeWebhook(req,res)).catch(next));
+app.use(express.json({limit:'100kb'}));app.get('/api/health',(req,res)=>res.json({status:'ok',service:'Cravia API'}));
+app.use('/api/auth',rateLimit({windowMs:15*60*1000,limit:30,standardHeaders:'draft-7',legacyHeaders:false}),auth);
+app.use('/api/menu',menu);app.use('/api/cart',cart);app.use('/api/orders',orders);
+app.use((req,res)=>res.status(404).json({message:'Route not found'}));
+app.use((err,req,res,next)=>{console.error(err);if(err.code===11000)return res.status(409).json({message:'Account or item already exists'});if(err instanceof SyntaxError && 'body' in err)return res.status(400).json({message:'Invalid JSON body'});res.status(err.status&&err.status<500?err.status:500).json({message:err.status&&err.status<500?err.message:'Server error. Please try again.'})});
+export default app;

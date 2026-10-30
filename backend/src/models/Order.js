@@ -1,0 +1,5 @@
+import mongoose from 'mongoose';
+const lines=new mongoose.Schema({menuItem:{type:mongoose.Schema.Types.ObjectId,ref:'MenuItem'},name:String,image:String,price:Number,quantity:Number},{_id:false});
+const address=new mongoose.Schema({fullName:String,email:String,phone:String,street:String,city:String,state:String,postal:String,country:String},{_id:false});
+const schema=new mongoose.Schema({user:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true,index:true},items:{type:[lines],required:true},address:{type:address,required:true},subtotal:Number,discount:Number,deliveryFee:Number,total:Number,coupon:{type:String,default:''},paymentMethod:{type:String,enum:['COD','Stripe'],required:true},paymentStatus:{type:String,enum:['unpaid','paid','refunded'],default:'unpaid'},status:{type:String,enum:['Placed','Preparing','On the way','Delivered','Cancelled'],default:'Placed'},stripeSessionId:{type:String,sparse:true,unique:true},paidAt:Date},{timestamps:true});
+export default mongoose.models.Order || mongoose.model('Order',schema);

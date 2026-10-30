@@ -1,0 +1,52 @@
+name: Capture CRAVIA live preview
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: 'Deployed HTTPS storefront URL (e.g., https://cravia-demo.netlify.app/)'
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  screenshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture real production homepage
+        env:
+          SITE_URL: ${{ inputs.site_url }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$SITE_URL" =~ ^https://[a-zA-Z0-9.-]+\.netlify\.app/?$ ]]; then
+            echo 'Only HTTPS Netlify site URLs are allowed.' >&2
+            exit 1
+          fi
+          mkdir -p assets
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium)"
+          "$CHROME_BIN" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --hide-scrollbars \
+            --window-size=1440,900 --virtual-time-budget=9000 \
+            --screenshot="$(pwd)/assets/cravia-home-preview.png" "$SITE_URL"
+          test -s assets/cravia-home-preview.png
+      - name: Optimize actual screenshot
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          original=Path('assets/cravia-home-preview.png')
+          target=Path('assets/cravia-home-preview.webp')
+          with Image.open(original) as img:
+              assert img.width >= 1000 and img.height >= 600
+              img.convert('RGB').save(target,'WEBP',quality=78,method=6)
+          original.unlink()
+          PY
+      - name: Commit screenshot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/cravia-home-preview.webp
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'docs: capture live CRAVIA screenshot [skip ci]'
+          git push origin HEAD:main

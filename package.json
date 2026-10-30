@@ -1,0 +1,6 @@
+{
+  "name": "cravia-food-delivery", "version": "1.0.0", "private": true, "type": "module",
+  "workspaces": ["frontend", "admin", "backend"],
+  "scripts": { "dev": "concurrently -n API,WEB,ADMIN -c cyan,green,magenta \"npm run dev -w backend\" \"npm run dev -w frontend\" \"npm run dev -w admin\"", "check": "npm run check -w backend && npm run build", "build": "npm run build -w frontend && npm run build -w admin", "build:netlify": "node scripts/build-netlify.mjs", "seed": "npm run seed -w backend" },
+  "devDependencies": {"concurrently": "^9.1.2"}
+}

@@ -1,0 +1,23 @@
+CRAVIA V2 — PRODUCTS + ANIMATIONS FIX
+
+Fresh setup:
+  1) Extract CRAVIA_Project_2_Fixed_V2.zip to a new folder.
+  2) Double click SETUP-CRAVIA.bat (or npm install + manual .env setup).
+  3) Double click START-WINDOWS.bat.
+  4) Open http://localhost:5173 and scroll down.
+
+Updating your previous CRAVIA v1 project:
+  1) Back up the entire old project folder first.
+  2) Extract V2 ZIP and copy its files into the OLD CRAVIA project root.
+  3) DO NOT replace your existing backend/.env, frontend/.env or admin/.env.
+  4) Run npm install; npm run seed; npm run dev.
+
+What is fixed:
+  • 18 sample dishes appear in preview mode if API is offline or MongoDB empty.
+  • Preview is explicitly labeled and cannot place fake real orders.
+  • When database is connected, sample menu auto-seeds on local dev startup.
+  • Smooth hero animation, ticker, image drift, category and dish scroll reveals.
+  • Motion respects your device's reduced-motion preferences.
+
+Important: For real cart/checkout, set up MongoDB and JWT_SECRET.
+Never paste your Atlas URI, passwords or JWT secret into chat/GitHub.
